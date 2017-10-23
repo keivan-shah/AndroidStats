@@ -29,7 +29,7 @@ public class StatsService extends Service
     private WindowManager windowManager;
     private static boolean overlayPermission;
     private static stats Statistics;
-    private Handler h;
+    private Handler handler;
 
 
     // Default Values
@@ -50,7 +50,7 @@ public class StatsService extends Service
     {
         super.onCreate();
         Statistics = new stats(getBaseContext());
-        h = new Handler();
+        handler = new Handler();
 
         MainActivity.overlayDrawn=true;
         random = new Random();
@@ -64,18 +64,16 @@ public class StatsService extends Service
 
         drawFloatingStats();
 
-        h.postDelayed(new Runnable()
+        handler.postDelayed(new Runnable()
         {
             @Override
             public void run()
             {
                 floatingTextView.setText(Statistics.getStats());
-                h.postDelayed(this,UPDATE_DURATION);
+                handler.postDelayed(this,UPDATE_DURATION);
                 return;
             }
         },UPDATE_DURATION);
-
-
     }
 
     @Override
@@ -92,7 +90,7 @@ public class StatsService extends Service
         Log.d("Floating", "OnDestroy UUID=" + UUID);
         if(floatingTextView!=null)
             windowManager.removeView(floatingTextView);
-//        handler.removeCallbacksAndMessages(null);
+        handler.removeCallbacksAndMessages(null);
         super.onDestroy();
     }
 
@@ -157,6 +155,7 @@ public class StatsService extends Service
                     return false;
                 }
             });
+            floatingTextView.setText(Statistics.getStats());
         }
         catch (Exception e)
         {
