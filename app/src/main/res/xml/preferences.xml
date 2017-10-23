@@ -6,4 +6,21 @@
         android:key="test_switch"
         android:summary="What this switch does"
         android:title="Switch preference"/>
+
+    <PreferenceCategory>
+        <com.jaredrummler.android.colorpicker.ColorPreference
+            android:defaultValue="?attr/colorPrimary"
+            android:key="overlay_text_color"
+            android:summary="Select the Text Color for Overlay"
+            android:title="Text Color"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory>
+        <com.jaredrummler.android.colorpicker.ColorPreference
+            android:defaultValue="?attr/colorBackgroundFloating"
+            android:key="overlay_background_color"
+            android:summary="Select the Background Color for Overlay"
+            android:title="Background Color"/>
+    </PreferenceCategory>
+
 </PreferenceScreen>
