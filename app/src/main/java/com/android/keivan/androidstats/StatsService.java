@@ -2,10 +2,13 @@ package com.android.keivan.androidstats;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -20,13 +23,21 @@ import java.util.Random;
 
 public class StatsService extends Service
 {
-    private static boolean overlayPermission;
-    Color backgroundColor;
-    Color textColor;
     private int UUID;
     private Random random;
     private TextView floatingTextView;
     private WindowManager windowManager;
+    private static boolean overlayPermission;
+
+    // Customization Variables
+    Color backgroundColor;
+    Color textColor;
+
+
+    public static void setOverlayPermission(boolean overlayPermission)
+    {
+        StatsService.overlayPermission = overlayPermission;
+    }
 
     @Override
     public void onCreate()
@@ -37,7 +48,13 @@ public class StatsService extends Service
         Log.d("Floating", "UUID=" + UUID);
         floatingTextView = new TextView(this);
 
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        Log.i("Pref",pref.getAll().toString());
 
+        if(overlayPermission)
+        {
+            drawFloatingStats();
+        }
     }
 
     @Override

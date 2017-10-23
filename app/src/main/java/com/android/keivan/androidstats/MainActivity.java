@@ -2,9 +2,11 @@ package com.android.keivan.androidstats;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.RequiresApi;
@@ -13,6 +15,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity
@@ -20,6 +24,7 @@ public class MainActivity extends AppCompatActivity
 
     public final static int REQUEST_CODE = 127;
     private boolean overlayPermission;
+    ImageButton startButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -29,7 +34,33 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        Log.i("Pref",pref.getAll().toString());
+
         if(!overlayPermission) checkDrawOverlayPermission();
+
+        startButton = (ImageButton) findViewById(R.id.startButton);
+        startButton.setBackgroundResource(R.drawable.selector);
+        startButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View button)
+            {
+                if (button.isSelected())
+                {
+                    Log.d("Button","Setting to false");
+                    startButton.setSelected(false);
+                    startButton.setBackgroundResource(R.drawable.selector);
+                }
+                else
+                {
+                    Log.d("Button","Setting to true");
+                    startButton.setSelected(true);
+                    startButton.setBackgroundResource(R.drawable.selector);
+                }
+            }
+        });
     }
 
     @Override
@@ -65,17 +96,19 @@ public class MainActivity extends AppCompatActivity
         // check if we already  have permission to draw over other apps
         if(!Settings.canDrawOverlays(this))
         {
+            setOverlayPermission(false);
             Log.v("App", "Requesting Permission" + Settings.canDrawOverlays(this));
             // if not construct intent to request permission
             Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                     Uri.parse("package:" + getApplicationContext().getPackageName()));
             // request permission via start activity for result
+            Toast.makeText(getApplicationContext(), "Please Grant This Permission!", Toast.LENGTH_LONG).show();
             startActivityForResult(intent, REQUEST_CODE);
         }
         else
         {
-            Log.v("App", "We already have permission for it.");
-            Toast.makeText(getApplicationContext(), "WE HAVE Permission", Toast.LENGTH_LONG).show();
+            setOverlayPermission(true);
+            Log.v("App", "App already has required permissions.");
         }
     }
 
@@ -92,8 +125,8 @@ public class MainActivity extends AppCompatActivity
             {
                 if(Settings.canDrawOverlays(this))
                 {
-                    overlayPermission = true;
-                    Toast.makeText(getApplicationContext(), "WE HAVE Permission", Toast.LENGTH_LONG).show();
+                    setOverlayPermission(true);
+                    Toast.makeText(getApplicationContext(), "App has required Permission!", Toast.LENGTH_LONG).show();
                 }
             }
         }
@@ -102,6 +135,6 @@ public class MainActivity extends AppCompatActivity
     public void setOverlayPermission(boolean overlayPermission)
     {
         this.overlayPermission = overlayPermission;
-
+        StatsService.setOverlayPermission(overlayPermission);
     }
 }

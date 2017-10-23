@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 
 /**
  * A simple {@link Fragment} subclass.

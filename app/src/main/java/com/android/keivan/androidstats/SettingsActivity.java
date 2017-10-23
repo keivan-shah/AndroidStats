@@ -6,6 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 public class SettingsActivity extends AppCompatActivity
 {
 
+
+    public static final String OVERLAY_BACKGROUND_COLOR = "OVERLAY_BACKGROUND_COLOR";
+    public static final String OVERLAY_TEXT_COLOR = "OVERLAY_TEXT_COLOR";
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
