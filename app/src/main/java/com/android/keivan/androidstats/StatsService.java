@@ -7,7 +7,6 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -43,6 +42,7 @@ public class StatsService extends Service
     public void onCreate()
     {
         super.onCreate();
+        MainActivity.overlayDrawn=true;
         random = new Random();
         UUID = random.nextInt(1000);
         Log.d("Floating", "UUID=" + UUID);
@@ -54,6 +54,7 @@ public class StatsService extends Service
         if(overlayPermission)
         {
             drawFloatingStats();
+            floatingTextView.setText("TEST DATA");
         }
     }
 
@@ -67,6 +68,7 @@ public class StatsService extends Service
     @Override
     public void onDestroy()
     {
+        MainActivity.overlayDestroy();
         Log.d("Floating", "Inside onDestroy of Floating class");
         Log.d("Floating", "OnDestroy UUID=" + UUID);
         windowManager.removeView(floatingTextView);

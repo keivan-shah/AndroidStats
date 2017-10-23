@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.RequiresApi;
@@ -24,7 +23,8 @@ public class MainActivity extends AppCompatActivity
 
     public final static int REQUEST_CODE = 127;
     private boolean overlayPermission;
-    ImageButton startButton;
+    static ImageButton startButton;
+    public static boolean overlayDrawn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -34,13 +34,29 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         Log.i("Pref",pref.getAll().toString());
 
         if(!overlayPermission) checkDrawOverlayPermission();
 
         startButton = (ImageButton) findViewById(R.id.startButton);
+
+        if(!overlayPermission)
+        {
+            startButton.setEnabled(false);
+        }
+        else
+        {
+            startButton.setEnabled(true);
+            if(overlayDrawn)
+            {
+                startButton.setSelected(true);
+            }
+            else
+            {
+                startButton.setSelected(false);
+            }
+        }
         startButton.setBackgroundResource(R.drawable.selector);
         startButton.setOnClickListener(new View.OnClickListener()
         {
@@ -52,12 +68,15 @@ public class MainActivity extends AppCompatActivity
                     Log.d("Button","Setting to false");
                     startButton.setSelected(false);
                     startButton.setBackgroundResource(R.drawable.selector);
+                    stopService(new Intent(MainActivity.this, StatsService.class));
                 }
                 else
                 {
                     Log.d("Button","Setting to true");
                     startButton.setSelected(true);
                     startButton.setBackgroundResource(R.drawable.selector);
+                    startService(new Intent(MainActivity.this, StatsService.class));
+
                 }
             }
         });
@@ -125,6 +144,7 @@ public class MainActivity extends AppCompatActivity
             {
                 if(Settings.canDrawOverlays(this))
                 {
+                    startButton.setEnabled(true);
                     setOverlayPermission(true);
                     Toast.makeText(getApplicationContext(), "App has required Permission!", Toast.LENGTH_LONG).show();
                 }
@@ -136,5 +156,11 @@ public class MainActivity extends AppCompatActivity
     {
         this.overlayPermission = overlayPermission;
         StatsService.setOverlayPermission(overlayPermission);
+    }
+
+    public static void overlayDestroy()
+    {
+        overlayDrawn=false;
+        startButton.setSelected(false);
     }
 }
