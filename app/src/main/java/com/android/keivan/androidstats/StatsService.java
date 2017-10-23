@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
+import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
@@ -27,11 +28,14 @@ public class StatsService extends Service
     private TextView floatingTextView;
     private WindowManager windowManager;
     private static boolean overlayPermission;
+    private static stats Statistics;
+    private Handler h;
 
 
     // Default Values
     private static final int DEFAULT_TEXT_COLOR = Color.argb(255, 225, 100, 30);
     private static final int DEFAULT_BACKGROUND_COLOR = Color.argb(64,200,200,200);
+    private static final int UPDATE_DURATION = 1000;
 
     // Customization Variables
     int backgroundColor,textColor;
@@ -45,6 +49,9 @@ public class StatsService extends Service
     public void onCreate()
     {
         super.onCreate();
+        Statistics = new stats(getBaseContext());
+        h = new Handler();
+
         MainActivity.overlayDrawn=true;
         random = new Random();
         UUID = random.nextInt(1000);
@@ -55,10 +62,19 @@ public class StatsService extends Service
         textColor = pref.getInt(getString(R.string.overlay_text_color),DEFAULT_TEXT_COLOR);
         backgroundColor = pref.getInt(getString(R.string.overlay_background_color),DEFAULT_BACKGROUND_COLOR);
 
-        Log.i("Pref",pref.getAll().toString());
-
         drawFloatingStats();
-        floatingTextView.setText("TEST DATA");
+
+        h.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                floatingTextView.setText(Statistics.getStats());
+                h.postDelayed(this,UPDATE_DURATION);
+                return;
+            }
+        },UPDATE_DURATION);
+
 
     }
 
