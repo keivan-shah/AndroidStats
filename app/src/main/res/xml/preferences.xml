@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <SwitchPreference
         android:defaultValue="false"
@@ -10,17 +11,19 @@
     <PreferenceCategory>
         <com.jaredrummler.android.colorpicker.ColorPreference
             android:defaultValue="?attr/colorPrimary"
-            android:key="overlay_text_color"
+            android:key="@string/overlay_text_color"
             android:summary="Select the Text Color for Overlay"
-            android:title="Text Color"/>
+            android:title="Text Color"
+            app:cpv_showAlphaSlider="true"/>
     </PreferenceCategory>
 
     <PreferenceCategory>
         <com.jaredrummler.android.colorpicker.ColorPreference
             android:defaultValue="?attr/colorBackgroundFloating"
-            android:key="overlay_background_color"
+            android:key="@string/overlay_background_color"
             android:summary="Select the Background Color for Overlay"
-            android:title="Background Color"/>
+            android:title="Background Color"
+            app:cpv_showAlphaSlider="true"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

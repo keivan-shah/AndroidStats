@@ -28,10 +28,13 @@ public class StatsService extends Service
     private WindowManager windowManager;
     private static boolean overlayPermission;
 
-    // Customization Variables
-    Color backgroundColor;
-    Color textColor;
 
+    // Default Values
+    private static final int DEFAULT_TEXT_COLOR = Color.argb(255, 225, 100, 30);
+    private static final int DEFAULT_BACKGROUND_COLOR = Color.argb(64,200,200,200);
+
+    // Customization Variables
+    int backgroundColor,textColor;
 
     public static void setOverlayPermission(boolean overlayPermission)
     {
@@ -49,20 +52,20 @@ public class StatsService extends Service
         floatingTextView = new TextView(this);
 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        textColor = pref.getInt(getString(R.string.overlay_text_color),DEFAULT_TEXT_COLOR);
+        backgroundColor = pref.getInt(getString(R.string.overlay_background_color),DEFAULT_BACKGROUND_COLOR);
+
         Log.i("Pref",pref.getAll().toString());
 
-        if(overlayPermission)
-        {
-            drawFloatingStats();
-            floatingTextView.setText("TEST DATA");
-        }
+        drawFloatingStats();
+        floatingTextView.setText("TEST DATA");
+
     }
 
     @Override
     public IBinder onBind(Intent intent)
     {
-        // TODO: Return the communication channel to the service.
-        throw new UnsupportedOperationException("Not yet implemented");
+        return null;
     }
 
     @Override
@@ -71,7 +74,8 @@ public class StatsService extends Service
         MainActivity.overlayDestroy();
         Log.d("Floating", "Inside onDestroy of Floating class");
         Log.d("Floating", "OnDestroy UUID=" + UUID);
-        windowManager.removeView(floatingTextView);
+        if(floatingTextView!=null)
+            windowManager.removeView(floatingTextView);
 //        handler.removeCallbacksAndMessages(null);
         super.onDestroy();
     }
@@ -79,8 +83,8 @@ public class StatsService extends Service
     public void drawFloatingStats()
     {
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-        floatingTextView.setTextColor(Color.argb(255, 225, 100, 30));
-        floatingTextView.setBackgroundColor(Color.argb(64, 200, 200, 200));
+        floatingTextView.setTextColor(textColor);
+        floatingTextView.setBackgroundColor(backgroundColor);
         //here is all the science of params
         final LayoutParams myParams = new WindowManager.LayoutParams(
                 LayoutParams.WRAP_CONTENT,

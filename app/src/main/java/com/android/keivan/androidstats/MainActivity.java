@@ -68,18 +68,24 @@ public class MainActivity extends AppCompatActivity
                     Log.d("Button","Setting to false");
                     startButton.setSelected(false);
                     startButton.setBackgroundResource(R.drawable.selector);
-                    stopService(new Intent(MainActivity.this, StatsService.class));
+                    stopService(new Intent(getApplicationContext(), StatsService.class));
                 }
                 else
                 {
                     Log.d("Button","Setting to true");
                     startButton.setSelected(true);
                     startButton.setBackgroundResource(R.drawable.selector);
-                    startService(new Intent(MainActivity.this, StatsService.class));
+                    startService(new Intent(getApplicationContext(), StatsService.class));
 
                 }
             }
         });
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
     }
 
     @Override
@@ -155,12 +161,12 @@ public class MainActivity extends AppCompatActivity
     public void setOverlayPermission(boolean overlayPermission)
     {
         this.overlayPermission = overlayPermission;
-        StatsService.setOverlayPermission(overlayPermission);
     }
 
     public static void overlayDestroy()
     {
         overlayDrawn=false;
-        startButton.setSelected(false);
+        if(startButton!=null)
+            startButton.setSelected(false);
     }
 }
