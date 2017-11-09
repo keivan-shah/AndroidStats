@@ -61,7 +61,20 @@ public class StatsService extends Service
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         textColor = pref.getInt(getString(R.string.overlay_text_color),DEFAULT_TEXT_COLOR);
         backgroundColor = pref.getInt(getString(R.string.overlay_background_color),DEFAULT_BACKGROUND_COLOR);
-
+        pref.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener()
+        {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences pref, String s)
+            {
+                textColor = pref.getInt(getString(R.string.overlay_text_color),DEFAULT_TEXT_COLOR);
+                backgroundColor = pref.getInt(getString(R.string.overlay_background_color),DEFAULT_BACKGROUND_COLOR);
+                if(floatingTextView!=null)
+                {
+                    floatingTextView.setTextColor(textColor);
+                    floatingTextView.setBackgroundColor(backgroundColor);
+                }
+            }
+        });
         drawFloatingStats();
 
         handler.postDelayed(new Runnable()

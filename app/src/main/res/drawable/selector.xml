@@ -3,13 +3,13 @@
     <item
         android:state_enabled="true"
         android:state_selected="false"
-        android:drawable="@drawable/add_stats" />
+        android:drawable="@drawable/add_stats_button" />
 
     <item
         android:state_enabled="true"
         android:state_selected="true"
-        android:drawable="@drawable/remove_stats" />
+        android:drawable="@drawable/remove_stats_button" />
     <item
         android:state_enabled="false"
-        android:drawable="@drawable/no_permission" />
+        android:drawable="@drawable/no_permission_error" />
 </selector>

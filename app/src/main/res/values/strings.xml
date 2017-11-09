@@ -3,4 +3,7 @@
     <string name="action_settings">Settings</string>
     <string name="overlay_text_color">TextColor</string>
     <string name="overlay_background_color">BackgroundColor</string>
+    <string name="quick_tile_status">QuickTileStatus</string>
+    <string name="quick_tile_active_text">Remove Stats</string>
+    <string name="quick_tile_inactive_text">Show Stats</string>
 </resources>
